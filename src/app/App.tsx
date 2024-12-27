@@ -7,19 +7,22 @@ import { SideBar } from '@/widgets/SideBar';
 
 import '@/shared/config/i18n/i18n.ts';
 import { Suspense } from 'react';
+import ErrorBoundary from '@/app/providers/ErrorBoundary/ErrorBoundary.tsx';
 
 function App() {
   const { theme } = useTheme();
 
   return (
     <div className={`app ${theme}`}>
-      <Suspense fallback="">
-        <NavBar />
-        <div className={'main-screen'}>
-          <SideBar />
-          <AppRouter />
-        </div>
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback="">
+          <NavBar />
+          <div className={'main-screen'}>
+            <SideBar />
+            <AppRouter />
+          </div>
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 
 .btn {
   cursor: pointer;
+  color: var(--primary-color);
 }
 
 .clear {
@@ -9,4 +10,11 @@
   margin: 0;
   padding: 0;
   background: none;
+}
+
+.outline {
+  border: 1px solid var(--primary-color);
+  padding: 10px 20px;
+  background: none;
+  outline: none;
 }
