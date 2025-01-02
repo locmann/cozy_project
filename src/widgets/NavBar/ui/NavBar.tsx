@@ -1,22 +1,44 @@
-import { RoutePaths } from '@/shared/config';
-
 import styles from './styles.module.scss';
 import { clsx } from 'clsx';
-import { FC } from 'react';
-import { AppLink } from '@/shared/ui';
-import { useTranslation } from 'react-i18next';
+import { FC, useState } from 'react';
+import { Button } from '@/shared/ui';
+import { ButtonTheme } from '@/shared/ui/Button/Button.tsx';
+import { LoginModal } from '@/features/AuthByUsername';
+import { useSelector } from 'react-redux';
+import { getUserAuthData } from '@/entities/User';
 
 interface INavBar {
   className?: string;
 }
 
 export const NavBar: FC<INavBar> = ({ className }) => {
-  const { t } = useTranslation('home');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const authUser = useSelector(getUserAuthData);
+
+  if (authUser) {
+    return (
+      <nav className={clsx(styles.navBar, className)}>
+        <Button
+          theme={ButtonTheme.CLEAR_INVERTED}
+          onClick={() => setIsOpen(true)}
+        >
+          Выйти
+        </Button>
+        <p>Привет, {authUser.username}!</p>
+      </nav>
+    );
+  }
+
   return (
     <nav className={clsx(styles.navBar, className)}>
-      <AppLink className={clsx(styles.link)} to={RoutePaths.home}>
-        {t('Главная страница')}
-      </AppLink>
+      <Button
+        theme={ButtonTheme.CLEAR_INVERTED}
+        onClick={() => setIsOpen(true)}
+      >
+        Войти
+      </Button>
+      <LoginModal isOpen={isOpen} onClose={setIsOpen} />
     </nav>
   );
 };

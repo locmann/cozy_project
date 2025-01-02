@@ -1,0 +1,22 @@
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+
+  width: 300px;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px
+}
+
+.input {
+  flex-grow: unset;
+}
+
+.btn {
+  margin-left: auto;
+}

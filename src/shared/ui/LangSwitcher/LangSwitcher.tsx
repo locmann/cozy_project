@@ -2,8 +2,14 @@ import { Button } from '@/shared/ui';
 import { useTranslation } from 'react-i18next';
 
 import styles from './stlyles.module.scss';
+import { ButtonTheme } from '@/shared/ui/Button/Button.tsx';
+import { FC } from 'react';
 
-export const LangSwitcher = () => {
+interface ILangSwitcher {
+  short?: boolean;
+}
+
+export const LangSwitcher: FC<ILangSwitcher> = ({ short }) => {
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = () => {
@@ -11,8 +17,12 @@ export const LangSwitcher = () => {
   };
 
   return (
-    <Button onClick={handleLanguageChange} className={styles.btn}>
-      {t('Перевести')}
+    <Button
+      onClick={handleLanguageChange}
+      className={styles.btn}
+      theme={ButtonTheme.CLEAR_INVERTED}
+    >
+      {t(short ? 'Перевести сжатый' : 'Перевести')}
     </Button>
   );
 };
