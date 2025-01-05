@@ -8,9 +8,11 @@ import ErrorBoundary from '@/app/providers/ErrorBoundary/ErrorBoundary.tsx';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/app/providers/StoreProvider';
 import { userActions } from '@/entities/User';
+import { Loader } from '@/shared/ui';
+import { useAppDispatch } from '@/shared/lib/hooks/reduxHooks.ts';
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(userActions.initUserData());
@@ -19,7 +21,7 @@ function App() {
   return (
     <div className={`app`}>
       <ErrorBoundary>
-        <Suspense fallback="">
+        <Suspense fallback={<Loader />}>
           <NavBar />
           <div className={'main-screen'}>
             <SideBar />

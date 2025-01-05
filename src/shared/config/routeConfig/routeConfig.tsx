@@ -1,16 +1,19 @@
 import { HomePage } from '@/pages/HomePage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { AboutPage } from '@/pages/AboutPage';
+import { ProfilePage } from '@/pages/ProfilePage';
 
 export enum Routes {
   HOME = 'home',
   ABOUT = 'about',
+  PROFILE = 'profile',
   NOT_FOUND = 'notFound',
 }
 
 export const RoutePaths: Record<Routes, string> = {
   [Routes.HOME]: '/',
   [Routes.ABOUT]: '/about',
+  [Routes.PROFILE]: '/profile',
   [Routes.NOT_FOUND]: '*',
 };
 
@@ -26,8 +29,13 @@ export const routeConfig = [
     id: 2,
   },
   {
+    path: RoutePaths.profile,
+    element: <ProfilePage />,
+    id: 3,
+  },
+  {
     path: RoutePaths.notFound,
     element: <NotFoundPage />,
-    id: 3,
+    id: 4,
   },
 ];

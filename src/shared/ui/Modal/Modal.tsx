@@ -1,9 +1,7 @@
 import styles from './Modal.module.scss';
 import {
-  Dispatch,
   FC,
   PropsWithChildren,
-  SetStateAction,
   MouseEvent,
   useState,
   useRef,
@@ -16,18 +14,20 @@ import { Portal } from '@/shared/ui';
 interface IModal extends PropsWithChildren {
   className?: string;
   isOpen: boolean;
-  onClose: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
+  lazy?: boolean;
 }
 
 export const Modal: FC<IModal> = (props) => {
-  const { children, isOpen, onClose, className = '' } = props;
+  const { children, isOpen, onClose, lazy, className = '' } = props;
   const [isClosing, setIsClosing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const closeHandler = useCallback(() => {
     setIsClosing(true);
     timerRef.current = setTimeout(() => {
-      onClose((prev) => !prev);
+      onClose();
       setIsClosing(false);
     }, 300);
   }, [onClose]);
@@ -35,6 +35,12 @@ export const Modal: FC<IModal> = (props) => {
   const onContentClick = (event: MouseEvent) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsMounted(true);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -55,6 +61,10 @@ export const Modal: FC<IModal> = (props) => {
       controller.abort();
     };
   }, [isOpen, closeHandler]);
+
+  if (lazy && !isMounted) {
+    return null;
+  }
 
   return (
     <Portal domNode={document.body}>

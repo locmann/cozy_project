@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, WithSlice } from '@reduxjs/toolkit';
 import { LoginSchema } from '../types/loginSchema.ts';
 import { loginByUsername } from '@/features/AuthByUsername/model/services/loginByUsername.ts';
+
+import { rootReducer } from '@/app/providers/StoreProvider';
 
 const initialState: LoginSchema = {
   isLoading: false,
@@ -8,7 +10,7 @@ const initialState: LoginSchema = {
   password: '',
 };
 
-export const loginSlice = createSlice({
+const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
@@ -30,10 +32,23 @@ export const loginSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(loginByUsername.pending, (state) => {
+      state.error = undefined;
       state.isLoading = true;
     });
+  },
+  selectors: {
+    selectLoginUsername: (state) => state.username,
+    selectLoginPassword: (state) => state.password,
+    selectIsLoading: (state) => state.isLoading,
   },
 });
 
 export const { actions: loginActions } = loginSlice;
-export const { reducer: loginReducer } = loginSlice;
+
+declare module 'src/app/providers/StoreProvider/lib/reducer.ts' {
+  export interface LazyLoadedSlices extends WithSlice<typeof loginSlice> {}
+}
+const injectedLoginSlice = loginSlice.injectInto(rootReducer);
+
+export const { selectLoginUsername, selectLoginPassword, selectIsLoading } =
+  injectedLoginSlice.selectors;

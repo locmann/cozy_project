@@ -9,8 +9,7 @@ export default defineConfig({
     react(),
     svgr(),
     visualizer({
-      template: 'treemap', // or sunburst
-      open: true,
+      template: 'treemap',
       gzipSize: true,
       brotliSize: true,
     }) as PluginOption,

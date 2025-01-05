@@ -1,16 +1,30 @@
 import { Button, Input } from '@/shared/ui';
 import styles from './styles.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { memo, useCallback } from 'react';
-import { loginActions } from '@/features/AuthByUsername/model/slice/loginSlice.ts';
+import {
+  loginActions,
+  selectIsLoading,
+  selectLoginPassword,
+  selectLoginUsername,
+} from '@/features/AuthByUsername/model/slice/loginSlice.ts';
 import { loginByUsername } from '@/features/AuthByUsername/model/services/loginByUsername.ts';
-import { getLoginData } from '@/features/AuthByUsername/model/selectors/getLoginData/getLoginData.ts';
-import { AppDispatch } from '@/app/providers/StoreProvider';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/lib/hooks/reduxHooks.ts';
 
-export const LoginForm = memo(() => {
-  const dispatch = useDispatch<AppDispatch>();
+export interface ILoginFormProps {
+  onSuccess: () => void;
+}
 
-  const { username, password, isLoading } = useSelector(getLoginData);
+const LoginForm = memo(({ onSuccess }: ILoginFormProps) => {
+  const dispatch = useAppDispatch();
+
+  const username = useAppSelector(selectLoginUsername);
+
+  const password = useAppSelector(selectLoginPassword);
+
+  const isLoading = useAppSelector(selectIsLoading);
 
   const onLoginChange = useCallback(
     (value: string) => {
@@ -26,9 +40,12 @@ export const LoginForm = memo(() => {
     [dispatch]
   );
 
-  const onLoginClick = useCallback(() => {
-    dispatch(loginByUsername({ username, password }));
-  }, [dispatch, password, username]);
+  const onLoginClick = useCallback(async () => {
+    const res = await dispatch(loginByUsername({ username, password }));
+    if (res.meta.requestStatus === 'fulfilled') {
+      onSuccess();
+    }
+  }, [dispatch, onSuccess, password, username]);
 
   return (
     <div className={styles.loginForm}>
@@ -51,3 +68,5 @@ export const LoginForm = memo(() => {
     </div>
   );
 });
+
+export default LoginForm;

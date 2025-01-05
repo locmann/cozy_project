@@ -1,18 +1,13 @@
 import styles from './styles.module.scss';
-import { AppLink, Button, LangSwitcher, ThemeSwitcher } from '@/shared/ui';
+import { Button, LangSwitcher, ThemeSwitcher } from '@/shared/ui';
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { ButtonSize, ButtonTheme } from '@/shared/ui/Button/Button.tsx';
-import { RoutePaths } from '@/shared/config';
-import { useTranslation } from 'react-i18next';
-
-import HomeIcon from '@/shared/assets/home.svg?react';
-import AboutIcon from '@/shared/assets/about.svg?react';
-import { AppLinkTheme } from '@/shared/ui/AppLink/AppLink.tsx';
+import { SideBarItemsList } from '../../model/items.ts';
+import { SideBarItem } from '@/widgets/SideBar/ui/SideBarItem/SideBarItem.tsx';
 
 export const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { t } = useTranslation();
   const handleCollapse = () => {
     setCollapsed((prevState) => !prevState);
   };
@@ -24,22 +19,15 @@ export const SideBar = () => {
       })}
     >
       <div className={styles.links}>
-        <AppLink
-          className={clsx(styles.link)}
-          to={RoutePaths.home}
-          theme={AppLinkTheme.SECONDARY}
-        >
-          <HomeIcon className={styles.icon} />
-          <span className={styles.linkText}>{t('Главная страница')}</span>
-        </AppLink>
-        <AppLink
-          className={clsx(styles.link)}
-          to={RoutePaths.about}
-          theme={AppLinkTheme.SECONDARY}
-        >
-          <AboutIcon className={styles.icon} />
-          <span className={styles.linkText}>{t('О нас')}</span>
-        </AppLink>
+        {SideBarItemsList.map((item) => (
+          <SideBarItem
+            key={item.path}
+            path={item.path}
+            Icon={item.Icon}
+            text={item.text}
+            collapsed={collapsed}
+          />
+        ))}
       </div>
 
       <Button

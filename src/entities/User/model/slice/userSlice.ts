@@ -17,6 +17,10 @@ export const userSlice = createSlice({
         state.user = JSON.parse(user);
       }
     },
+    logoutUser: (state) => {
+      localStorage.removeItem('user');
+      state.user = undefined;
+    },
   },
 });
 
